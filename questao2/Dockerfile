@@ -57,3 +57,25 @@ RUN echo "source /workspace/install/setup.bash" >> ~/.bashrc
 
 # Define o ponto de entrada do container
 CMD ["bash"]
+
+# Configurando Pacote 1
+WORKDIR /workspace/src/pacote1
+RUN colcon build --packages-select pacote1
+RUN source install/setup.bash
+RUN ros2 run pacote1 mem_publisher
+
+# Configurando Pacote 2
+WORKDIR /workspace/src/pacote2
+RUN colcon build --packages-select pacote2
+RUN source install/setup.bash
+RUN ros2 run pacote2 sensor_simulator
+RUN ros2 service call /clear_data pacote2/srv/ClearData
+RUN ros2 service call /get_last_readings pacote2/srv/GetLast64Readings
+
+# Configurando Pacote 3
+WORKDIR /workspace/src/pacote3
+RUN colcon build --packages-select pacote3
+RUN source install/setup.bash
+RUN ros2 run pacote3 primo_action_server
+RUN ros2 action send_goal /find_nth_prime pacote3/action/FindNthPrime "{n: 10}"
+

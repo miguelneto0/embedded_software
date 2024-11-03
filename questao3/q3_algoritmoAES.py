@@ -2,7 +2,6 @@ from Crypto.Cipher import AES
 import binascii
 
 def pkcs7_unpad(data: bytes) -> bytes:
-    """Remove o padding PKCS7."""
     padding_len = data[-1]
     return data[:-padding_len]
 
